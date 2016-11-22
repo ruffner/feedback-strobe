@@ -756,7 +756,7 @@ design rules under a new name.</description>
 <element name="U2" library="SparkFun-PowerIC" package="TO-252" value="+12v" x="6.858" y="7.62" rot="MR0">
 <attribute name="PROD_ID" value="VREG-12370" x="6.858" y="7.62" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="U3" library="SparkFun-PowerIC" package="SOT223" value="V_REG_317SMD" x="34.163" y="11.43" rot="R270"/>
+<element name="U3" library="SparkFun-PowerIC" package="SOT223" value="P CHAN MOSFET" x="34.163" y="11.43" rot="R270"/>
 <element name="TEENSY" library="SparkFun-Connectors" package="1X13" value="" x="3.302" y="16.256"/>
 <element name="IR" library="SparkFun-Connectors" package="1X02" value="" x="36.322" y="1.524" rot="R180"/>
 <element name="R1" library="SparkFun-Passives" package="0603-RES" value="" x="31.75" y="4.064" rot="MR135"/>

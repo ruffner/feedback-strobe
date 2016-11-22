@@ -5501,7 +5501,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <part name="DC_IN" library="SparkFun-Connectors" deviceset="POWER_JACK" device="SMD" value="5.5x2.1mm Barrel"/>
 <part name="U1" library="SparkFun-DigitalIC" deviceset="74LCX760" device="SOIC20"/>
 <part name="U2" library="SparkFun-PowerIC" deviceset="V_REG_78XX" device="7812" value="+12v"/>
-<part name="U3" library="SparkFun-PowerIC" deviceset="V_REG_317" device="SMD"/>
+<part name="U3" library="SparkFun-PowerIC" deviceset="V_REG_317" device="SMD" value="P CHAN MOSFET"/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="TEENSY" library="SparkFun-Connectors" deviceset="M13" device=""/>
 <part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
@@ -5794,6 +5794,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="-12.7" y1="73.66" x2="-7.62" y2="73.66" width="0.1524" layer="91"/>
+<label x="-7.62" y="73.66" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -5812,6 +5813,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="76.2" x2="-7.62" y2="76.2" width="0.1524" layer="91"/>
+<label x="-7.62" y="76.2" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$5" class="0">
@@ -5830,6 +5832,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="-12.7" y1="78.74" x2="-7.62" y2="78.74" width="0.1524" layer="91"/>
+<label x="-7.62" y="78.74" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LED4" class="0">
@@ -5841,6 +5844,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="81.28" x2="-7.62" y2="81.28" width="0.1524" layer="91"/>
+<label x="-7.62" y="81.28" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LED6" class="0">
@@ -5852,6 +5856,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R7" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="66.04" x2="-7.62" y2="66.04" width="0.1524" layer="91"/>
+<label x="-7.62" y="66.04" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LED8" class="0">
@@ -5863,6 +5868,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="71.12" x2="-7.62" y2="71.12" width="0.1524" layer="91"/>
+<label x="-7.62" y="71.12" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$12" class="0">
@@ -5888,6 +5894,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R6" gate="G$1" pin="2"/>
 <wire x1="-12.7" y1="68.58" x2="-7.62" y2="68.58" width="0.1524" layer="91"/>
+<label x="-7.62" y="68.58" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LED5" class="0">
@@ -5899,6 +5906,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <segment>
 <pinref part="R8" gate="G$1" pin="2"/>
 <wire x1="-12.7" y1="63.5" x2="-7.62" y2="63.5" width="0.1524" layer="91"/>
+<label x="-7.62" y="63.5" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$16" class="0">
