@@ -5,7 +5,7 @@ Feedback strobe is a technology demonstration aid for EE422G Signals and Systems
 The initial assembly of all printed parts and a populated revision 1 PCB can be seen below. All printing done on a MakerBot Replicator 5th Gen. The rubber band keeps tension on o-ring acting as a pulley.
 ![r1ass](images/first-assembly.jpg)
 
-Here is a parts list, excluding the PLA filament.
+Here are the parts:
 - http://www.digikey.com/product-detail/en/on-semiconductor/MC78M05CDTRKG/MC78M05CDTRKGODKR-ND/1140087
 - http://www.digikey.com/product-detail/en/vishay-siliconix/IRFL9110TRPBF/IRFL9110PBFCT-ND/812532
 - http://www.digikey.com/product-detail/en/cui-inc/PJ-002AH-SMT-TR/CP-002AHPJCT-ND/669692
