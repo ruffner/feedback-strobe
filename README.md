@@ -27,6 +27,12 @@ Data sheets for ICs used are in the ```docs/``` folder.
 <img src="images/v2pcb-sch.png" width="800" />
 <img src="images/v2pcb-brd.png" width="800" />
 
+Finished v2.1 PCB:
+
+<img src="images/v2pcb-top.jpg" width="500" />
+<img src="images/v2pcb-bottom.jpg" width="500" />
+
+
 ### In Action
 Although the software is not quite finished, here is a picture of it while in motion.
 <img src="images/fbs-action.jpg" width="800" />
