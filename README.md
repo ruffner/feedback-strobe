@@ -2,24 +2,36 @@
 
 Feedback strobe is a technology demonstration aid for EE422G Signals and Systems Laboratory at the University of Kentucky. Commisioned by [Dr. Kevin Donohue](https://www.engr.uky.edu/research/researchers/kevin-donohue/), the device will allow students to use LabView to monitor and control motor rotation speed, with the goal of tuning it such that strobing LEDs will 'stand still'
 
-### Plan of Operation
-A flow chart of the proposed operation can be seen below.
+### Operation
+
 <img src="images/feedback-strobe-data-flow.png">
 
 
-### Current Design
-The second generation body design can be seen below. Support was added to the motor mount to eliminate the need for the tensioning rubberband. The main base was also modified so that the device is self-supported.
+### Physical Design
+All structural parts in the Feedback Strobe were designed in Autodesk Inventor and printed on a 5th gen MakerBot Replicator (PLA filament). A slip ring is used to commutate both rotation speed and LED control signals. A LED-bar, the 'propellor' like part, was designed to hold the LEDs and IR reflectance sensor in place, to be driven by a motor with a pulley.
 
-Another PCB revision is in the works, with dimensions of 40mm x 30mm, it will sit in the notches above the mounted TennsyLC seen in the picture below. It will feature an 8 bit buffer to drive the LEDs, along with an updated N-channel MOSFET for motor speed control. 
+<img src="images/fbs-ir-close.jpg" width="600" />
 
-<img src="images/v2body.jpg" width="600" />
+An o-ring is used as the pulley. The 900 RPM micro-gear motor from Sparkfun was aligned such that its shaft would fit through one of the mounting holes of the slip ring. LED and IR sensor wires are routed through the center of the LED-bar, then through to the back side and attached.
 
-### Previous Design
-The initial assembly of all printed parts and a populated v1 PCB can be seen below. All printing done on a MakerBot Replicator 5th Gen. The rubber band keeps tension on o-ring acting as a pulley.
+<img src="images/fbs-exploded.jpg" width="600" />
 
-<img src="images/first-assembly.jpg" width="600" />
+The color-coded wires from the slip ring are then attached to the custom PCB, which hosts an LED buffer/driver, current limiting resistors for the LEDs, as well as a 5v regulator and motor control N-channel MOSFET. It also has a row of headers that line up with one side of the microcontroller, the Teensy-LC.
 
-Here are the parts:
+<img src="images/fbs-pcb-close.jpg" width="600" />
+
+### Schematic and PCB
+
+Data sheets for ICs used are in the ```docs/``` folder.
+
+<img src="images/v2pcb-sch.png" width="800" />
+<img src="images/v2pcb-brd.png" width="800" />
+
+### In Action
+Although the software is not quite finished, here is a picture of it while in motion.
+<img src="images/fbs-action.jpg" width="600" />
+
+Parts list:
 - http://www.digikey.com/product-detail/en/on-semiconductor/MC78M05CDTRKG/MC78M05CDTRKGODKR-ND/1140087
 - http://www.digikey.com/product-detail/en/vishay-siliconix/IRFL9110TRPBF/IRFL9110PBFCT-ND/812532
 - http://www.digikey.com/product-detail/en/cui-inc/PJ-002AH-SMT-TR/CP-002AHPJCT-ND/669692
