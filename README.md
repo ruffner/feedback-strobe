@@ -10,6 +10,8 @@ Feedback strobe is a technology demonstration aid for EE422G Signals and Systems
 ### Physical Design
 All structural parts in the Feedback Strobe were designed in Autodesk Inventor and printed on a 5th gen MakerBot Replicator (PLA filament). A slip ring is used to commutate both rotation speed and LED control signals. A LED-bar, the 'propellor' like part, was designed to hold the LEDs and IR reflectance sensor in place, to be driven by a motor with a pulley.
 
+All CAD models can be viewed on GitHub by accessing the ```.stl``` files in the ```cad/stl/``` [directory](https://github.com/ruffner/feedback-strobe/tree/master/cad/stl).
+
 <img src="images/fbs-ir-close.jpg" width="800" />
 
 An o-ring is used as the pulley. The 900 RPM micro-gear motor from Sparkfun was aligned such that its shaft would fit through one of the mounting holes of the slip ring. LED and IR sensor wires are routed through the center of the LED-bar, then through to the back side and attached.
