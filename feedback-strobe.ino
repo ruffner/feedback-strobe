@@ -9,7 +9,7 @@
 // 0-3.3v analog input representing the desired motor speed
 #define MOTOR_CTRL_PIN  14
 
-// blink rate control voltage
+// blink rate control voltage, also 0-3.3v
 #define STROBE_CTRL_PIN 15
 
 // led count and their pins
