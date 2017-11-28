@@ -3,8 +3,6 @@
 The Feedback Strobe is a technology demonstration aid for EE422G Signals and Systems Laboratory at the University of Kentucky. Commisioned by [Dr. Kevin Donohue](https://www.engr.uky.edu/research/researchers/kevin-donohue/) and [Dr. Michael Johnson](https://www.engr.uky.edu/research/researchers/michael-t-johnson/), the device facilitates hands on involvement in many aspects of a persistence of vision project. The students will be tasked with programming an ARM microcontroller using the Arduino IDE to control both rotation and blink speed of the device in order to produce a persistence of vision effect.
 
 ## Lab Procedure
-Yeehaw
-
 ### Setup
 #### Basic tools, supplies
 Gonna need some wire. Maybe some pliers for the wires that got tinned super heavy, these breadboards are tight. A bench power supply will be necessary after the all the connections have been made. 
