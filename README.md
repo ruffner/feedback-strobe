@@ -35,7 +35,6 @@ Slip ring wires can be pinned under the Teensy upon insertion into the breadboar
 #### Teensy pinout
 Any GPIO on the [Teensy pins](https://www.pjrc.com/teensy/card7a_rev1.png) can be used for driving the LEDs.
 
-Tracking this speed via periodic ADC operations will yield a rotation speed. This value, in Hz, corresponds to the frequency (or a harmonic threof) at which you must drive the GPIO pins connected to the LEDs. This way, no matter the speed of the motor, they will always be blinking in place!
 
 
 #### Powering the reflectance sensor
