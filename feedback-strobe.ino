@@ -1,128 +1,194 @@
-// feedback strobe firmware v1.0
-// Matt Ruffner 2017
+// FEEDBACK STROBE V2 
+// MATT RUFFNER 
+// NOVEMBER 2017
 
-// output to n channel mosfet
-#define MOTOR_PWM_PIN   16
-#define MOTOR_PWM_MIN   100
-#define MOTOR_PWM_MAX   255
+#include <TimerOne.h>
+#include <PID_v1.h>
 
-// 0-3.3v analog input representing the desired motor speed
-#define MOTOR_CTRL_PIN  14
+//Define PID variables
+double Setpoint, Input, Output;
 
-// blink rate control voltage, also 0-3.3v
-#define STROBE_CTRL_PIN 15
+// NUMBER OF LEDS
+#define NLEDS 8
 
-// led count and their pins
-#define NUM_LEDS 8
-#define LED_B1  20 // inner blue
-#define LED_B2  21
-#define LED_B3  22
-#define LED_B4  23 // outer blue
-#define LED_W1  19 // outer white
-#define LED_W2  18
-#define LED_W3  17
-#define LED_W4  13 // inner white
+//Specify the links and initial tuning parameters
+double Kp=.5, Ki=0, Kd=0;
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
-// in milliseconds
-#define STROBE_ON_TIME      10
-#define STROBE_RATES        10
-#define STROBE_OFF_MAX      STROBE_ON_TIME*STROBE_RATES
+/*------------------------------*/
+/* HARDWARE CONNECTIONS         */
+/*------------------------------*/
+// INDIVIDUAL LED CONNECTIONS
+#define LED1  12
+#define LED2  11
+#define LED3  10
+#define LED4  9
+#define LED5  17
+#define LED6  16
+#define LED7  15
+#define LED8  14
 
-// pin defs for LEDs
-uint8_t ledPins[NUM_LEDS] = {LED_B1,LED_B2,LED_B3,LED_B4,LED_W1,LED_W2,LED_W3,LED_W4};
-uint8_t ledState = HIGH; // off initially
+// TO EASE ITERATIONS
+const uint8_t leds[] = {LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8};
 
-// for routine to update motor and strobe control voltages
-unsigned long lastInputUpdate = 0;
-uint8_t inputUpdatePeriod = 10;
+/* PWM SIGNAL TO MOSFET */
+#define MOTOR_PIN 6
 
-// strobe control vars
-unsigned long lastStrobeTime = 0; // timestamp of last signal transition
-unsigned int strobeOffTime = STROBE_OFF_MAX; // start with slowest blink
-unsigned int strobeSetpoint = 0; // raw input voltage representation
-uint8_t strobeRateSelection = 0; // granular choice ranging from 1 to STROBE_RATES
+/* IR REFLECTANCE SENSOR ANALOG IN */
+#define IR_PIN    23//A9
+#define IR_SAMPLE_PERIOD 5000 // ISR PERIOD IN MICROSECONDS
+#define IR_SAMPLE_COUNT 200
+float irSamples[IR_SAMPLE_COUNT];
+unsigned long irSampleIndex = 0;
+volatile unsigned long lastIrMinTimestamp = 0;
+volatile unsigned long lastRotationPeriod = 0;
+float currentRotationFreq = 0;
 
-// specific to motor control
-uint16_t motorSetpoint = 0; // 12 bit control voltage input representation
-uint8_t motorSetpointAsPWM = 0; // 8 bit PWM motor control value out
 
-void setup() {
-  uint8_t i;
+// LED BLINK CONTROL VARIABLES
+bool ledState = LOW;
+unsigned long lastStrobeTime = 0; 
+unsigned long strobeOffTime = 120; 
+unsigned long strobeOnTime =  5;
+
+double blinkFreq = 1.0 / ((strobeOnTime + strobeOffTime)/1000.0);
+
+volatile bool started = 0;
+volatile bool newFreq = 0;
+
+#define DEBUG 1
+
+void setup()
+{
+  Serial.begin(9600);
   
-  Serial.begin( 9600 );
-  
-  for( i=0; i<NUM_LEDS; i++ ){
-    pinMode( ledPins[i], OUTPUT );
-    digitalWrite( ledPins[i], ledState ); 
+  // SET LEDS AS OUTPUTS AND TURN THEM OFF
+  if( DEBUG ) Serial.println("Setting LEDs as outputs...");
+  for (uint8_t i=0; i<NLEDS; i++ ){
+    pinMode(leds[i], OUTPUT);
+    digitalWrite(leds[i], LOW);
   }
 
-  // setup motor PWM pin as output, not spinning
-  pinMode( MOTOR_PWM_PIN, OUTPUT );
-  analogWrite( MOTOR_PWM_PIN, 0 );
+
+  // SET MOTOR AS OUTPUT, TURN OFF
+  if( DEBUG ) Serial.println("Initializing motor as output...");
+  pinMode(MOTOR_PIN, OUTPUT);
+  //driveMotor(255);
 
 
-  // dump blink frequencies for this setup
-  Serial.println("Blink rates:");
-  for( i=1; i<=STROBE_RATES; i++ ){
-    float freq = 1.0/( (STROBE_ON_TIME/1000.0) + i*(STROBE_ON_TIME/1000.0) );
-    Serial.println(freq);
-  }
+  // SET REFLECTANCE SENSOR AS INPUT
+  if( DEBUG ) Serial.println("Setting up analog input sampling...");
+  pinMode(IR_PIN, INPUT);
+  Timer1.initialize(IR_SAMPLE_PERIOD);
+  Timer1.attachInterrupt(sampleIRSensor);
+
+  Serial.println("Setting PID variables");
+  Input = currentRotationFreq;
+  Setpoint = map(blinkFreq*10, 0, 150, 0, 2550)/10.0;
+  myPID.SetOutputLimits(150,255);
+  myPID.SetMode(AUTOMATIC);
+
+  Serial.println("Starting...");
+
+  driveMotor(200);
 }
 
+unsigned long lastFreqUpdate = 0;
 
-// main exectution loop
-// at 48mhz, these .001 second granularity delays are no problem
-void loop() {
+void loop() 
+{
+  // put your main code here, to run repeatedly:
 
-  // compare time is based on stobe state allowing for a non 50% duty sycle
-  if( millis() - lastStrobeTime > ( ledState ? strobeOffTime : STROBE_ON_TIME ) ){
+  if( millis() - 1000 > lastFreqUpdate ){
+
+    noInterrupts();
+    double t = currentRotationFreq;
+    interrupts();
+    
+    Serial.print("current rot freq: ");
+    Serial.println(t);
+    lastFreqUpdate = millis();
+
+    Input = map(t*10, 0, 150, 0, 2550)/10.0;
+
+    myPID.Compute();
+    
+    Serial.print("new PID output: ");
+    Serial.println(Output);
+
+    driveMotor(Output);
+  }
+
+  
+//  // UPDATE ROTATION SPEED
+//  if( started && newFreq ){ 
+//    noInterrupts();
+//    Serial.print("rot freq: ");
+//    Serial.println(currentRotationFreq);
+//
+//    
+//    newFreq = 0;
+//  }
+
+
+  // drive LEDs
+  if( millis() - lastStrobeTime > ( ledState ? strobeOnTime : strobeOffTime ) ){
     // update timestamp
     lastStrobeTime = millis();
     
     toggleStrobe();
   }
 
-
-  if( millis() - lastInputUpdate > inputUpdatePeriod ){
-    // update timestamp
-    lastInputUpdate = millis();
-    
-    updateMotorControl();
-    updateBlinkControl();
-  }
-  
 }
 
-void toggleStrobe() {
+void sampleIRSensor()
+{
+  static bool state = 0;
+  uint16_t n = (irSampleIndex++) % 200;
+  irSamples[n] = (map(analogRead(IR_PIN), 0, 1023, 0, 10000)-5000)/10000.0;
+
+  // with ir in from -0.5-0.5, dIr_dt can range from -50 to 50 
+  if( irSampleIndex > 0 ){
+    // derivative 2 most recent IR readings
+    float dirdt = (irSamples[n]-irSamples[n-1]) / (IR_SAMPLE_PERIOD * 0.000001);
+    unsigned long rn = millis();
+
+    // trigger once a negative slope above a threshold is reached
+    // when a positive dirdt is found it will be at the valley of the signal dip
+    switch( state ){
+    case 0:
+      if( dirdt < -5 ){
+        state = 1;
+      }
+      break;
+    case 1:
+      if( dirdt > 0 ){
+        lastRotationPeriod = rn - lastIrMinTimestamp;
+        lastIrMinTimestamp = rn;
+        state = 0;
+        currentRotationFreq = (float)(1000.0/lastRotationPeriod);
+        //Serial.println(currentRotationFreq);
+        if( !started ) started = 1;
+        //newFreq = 1;
+      }
+    } 
+  }
+}
+
+void toggleStrobe()
+{
   uint8_t i;
   
   ledState = !ledState;
 
-  for( i=0; i<NUM_LEDS; i++ ){
-    digitalWrite( ledPins[i], ledState );
+  for( i=0; i<NLEDS; i++ ){
+    digitalWrite( leds[i], ledState );
   }
 }
 
-void updateMotorControl() {
-  // read target relative motor speed
-  motorSetpoint = analogRead ( MOTOR_CTRL_PIN );
-
-  // target speed to PWM out is not 1 to 1, need to scale  with 
-  // our minimum PWM value in mind
-  motorSetpointAsPWM = map( motorSetpoint, 0, 1023, MOTOR_PWM_MIN, MOTOR_PWM_MAX );
-
-  // updated motor speed
-  analogWrite( MOTOR_PWM_PIN, motorSetpointAsPWM );
-}
-
-void updateBlinkControl() {
-  // update control value from either the DAQ or potentiometer
-  strobeSetpoint = analogRead( STROBE_CTRL_PIN );
-
-  // rescale this to a granular 'selection' of rates
-  strobeRateSelection = map( strobeSetpoint, 0, 1023, 1, STROBE_RATES );
-
-  // convert to a delayable amount of time in increments of the pulse width
-  strobeOffTime = strobeRateSelection * STROBE_ON_TIME;
+void driveMotor(uint8_t spd)
+{
+  uint8_t realSpeed = map(spd, 0, 255, 255, 0);
+  analogWrite(MOTOR_PIN, realSpeed);
 }
 
